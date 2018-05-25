@@ -14,19 +14,16 @@
 .PARAMETER TransferSize
     Default: 50Mb
     The size of the file that will be transferred
-
-
-.INPUTS
-  <Inputs if any, otherwise state None>
-.OUTPUTS
-  <Outputs if any, otherwise state None - example: Log file stored in C:\Windows\Temp\<name>.log>
 .NOTES
   Version:        1.0
   Author:         Joshua M. Williams (JoshuaMWilliams@ProtonMail.com
   Creation Date:  5/25/18
   
 .EXAMPLE
-  <Example goes here. Repeat this attribute for more than one example>
+  Get-BitsSpeed -DestinationComputer hostname123 -TestCount 2
+  	Performs 2 tests to hostname123
+  Get-BitsSpeed -DestinationComputer hostname123 -TestCount 2 -Size 1Gb
+  	Performs 2 tests with a 1Gb file to hostname123
 #>
 
 Function Get-BITSSpeed{
@@ -112,4 +109,4 @@ Function Get-BITSSpeed{
     Remove-Item "\\$SourceComputer\C$\Temp\BitsTestFile.txt"
 
 }
-Get-BITSSpeed -DestinationComputer 021WJ6HLV42 -TestCount 2
+
