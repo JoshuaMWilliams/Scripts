@@ -99,6 +99,6 @@ Function Get-BITSSpeed{
     #Remove Temp File 
     Write-Host "Removing Test File"
     Remove-Item "\\$SourceComputer\C$\Temp\BitsTestFile.txt"
-
+    Remove-Item "\\$DestinationComputer\C$\Temp\BitsTestFile.txt"
 }
 
