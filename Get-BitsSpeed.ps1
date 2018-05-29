@@ -98,13 +98,14 @@ Function Get-BITSSpeed{
             $StopTime = Get-Date
             Write-Progress -completed -Activity "Transferring Data: Test ($($_)/$TestCount)" 
             #Calculate Data 
+	    #Add Results to Array
+      	    $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
+            $MbpsArray += $Mbps
             $TotalTime = New-TimeSpan $StartTime $StopTime
             Complete-BitsTransfer $BitsJob
         }While(($Autosize -eq $True) -and ($TotalTime.TotalSeconds -lt 12))
 	
-	#Add Results to Array
-        $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
-        $MbpsArray += $Mbps
+
     }
 
     Write-Host "Mbps:"
