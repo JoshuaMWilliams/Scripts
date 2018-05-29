@@ -57,6 +57,7 @@ Function Get-BITSSpeed{
       
     1..$TestCount | %{
         Do{
+	    #Automatically increase size if AutoSize and Time Requirement conditions are met
             If(($AutoSize -eq $True) -and ($TotalTime.TotalSeconds -lt 12)){
                 $TransferSize = $TransferSize * 2
                 $TempFile = [System.IO.File]::Create("\\$SourceComputer\C$\Temp\BitsTestFile.txt")
