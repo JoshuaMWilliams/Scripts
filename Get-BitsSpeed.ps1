@@ -32,7 +32,7 @@ Function Get-BITSSpeed{
         [Parameter(Mandatory = $False)]
         [double]$TransferSize = 20mb
 	)
-    [string]$SourceComputer = $env:ComputerName,
+    [string]$SourceComputer = $env:ComputerName
     Import-Module BitsTransfer
 
     #Test Connectivity 
@@ -89,7 +89,7 @@ Function Get-BITSSpeed{
         $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
         $MbpsArray += $Mbps
 
-	Complete-BitsTransfer $BitsTransferName
+	Complete-BitsTransfer $BitsJob
     }
 
     Write-Host "Mbps:"
