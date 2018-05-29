@@ -83,7 +83,7 @@ Function Get-BITSSpeed{
         }
 
         $StopTime = Get-Date
-        
+        Write-Progress -completed -Activity "Transferring Data: Test ($($_)/$TestCount)" 
         #Calculate Data 
         $TotalTime = New-TimeSpan $StartTime $StopTime
         $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
