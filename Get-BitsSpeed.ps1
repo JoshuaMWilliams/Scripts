@@ -53,7 +53,7 @@ Function Get-BITSSpeed{
     $TempFile.SetLength($TransferSize)
     $TempFile.Close()   
       
-    For($i= 0; $i -lt $TestCount; $i++){
+    1..$TestCount | %{
         $BitsTransferName = "BITS Speed Test" + (Get-Date)
         Start-BitsTransfer `
             -Source "\\$SourceComputer\C$\Temp\BitsTestFile.txt" `
@@ -79,7 +79,7 @@ Function Get-BITSSpeed{
         $StartTime = Get-Date
         While($BitsJob.BytesTransferred -lt $BitsJob.BytesTotal){
             $PercentComplete = ($BitsJob.BytesTransferred / $BitsJob.BytesTotal)*100
-            Write-Progress -Activity "Transferring Data: Test ($($i+1)/$TestCount)" -Status "$PercentComplete Percent Complete" -PercentComplete $PercentComplete
+            Write-Progress -Activity "Transferring Data: Test ($($_)/$TestCount)" -Status "$PercentComplete Percent Complete" -PercentComplete $PercentComplete
         }
 
         $StopTime = Get-Date
