@@ -5,9 +5,6 @@
   This script performs a BITS file transfer between two specified machines. 
 .PARAMETER DestinationComputer 
     The hostname of the target computer
-.PARAMETER SourceComputer
-    Default: localhost
-    The hostname of the computer from which a file will be transferred
 .PARAMETER TestCount
     Default: 1
     The number of transfers that will be completed
@@ -44,7 +41,6 @@ Function Get-BITSSpeed{
     Try{
         Write-Host "Testing Network Connection"
         Test-Connection $DestinationComputer -ErrorAction Stop | Out-Null
-        Test-Connection $SourceComputer -ErrorAction Stop | Out-Null
     }Catch{
         Write-Host "$($_.Exception.Message)"
         Break
