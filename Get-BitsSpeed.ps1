@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-  Perform a BITS Speed Test between 2 machines
+    Perform a BITS Speed Test between 2 machines
 .DESCRIPTION
-  This script performs a BITS file transfer between two specified machines. 
+    This script performs a BITS file transfer between two specified machines. 
 .PARAMETER DestinationComputer 
     The hostname of the target computer
 .PARAMETER TestCount
@@ -11,9 +11,11 @@
 .PARAMETER TransferSize
     Default: 50Mb
     The size of the file that will be transferred
+.PARAMETER AutoSize 
+    Whether or not to use AutoSize functionality
 .NOTES
   Version:        1.0
-  Author:         Joshua M. Williams (JoshuaMWilliams@ProtonMail.com
+  Author:         Joshua M. Williams (JoshuaMWilliams@ProtonMail.com)
   Creation Date:  5/25/18
   
 .EXAMPLE
