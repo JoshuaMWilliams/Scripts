@@ -54,8 +54,6 @@ Function Get-BITSSpeed{
     $TempFile.Close()   
       
     For($i= 0; $i -lt $TestCount; $i++){
-        Write-Host "Running Speed Test"
-        #Start Test
         $BitsTransferName = "BITS Speed Test" + (Get-Date)
         Start-BitsTransfer `
             -Source "\\$SourceComputer\C$\Temp\BitsTestFile.txt" `
