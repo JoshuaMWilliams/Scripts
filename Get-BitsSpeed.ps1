@@ -30,7 +30,9 @@ Function Get-BITSSpeed{
         [Parameter(Mandatory = $False)]
         [int]$TestCount = 1,
         [Parameter(Mandatory = $False)]
-        [double]$TransferSize = 20mb
+        [double]$TransferSize = 20mb,
+        [Parameter(Mandatory = $False)]
+        [bool]$AutoSize
 	)
     [string]$SourceComputer = $env:ComputerName
     Import-Module BitsTransfer
@@ -54,42 +56,51 @@ Function Get-BITSSpeed{
     $TempFile.Close()   
       
     1..$TestCount | %{
-        $BitsTransferName = "BITS Speed Test" + (Get-Date)
-        Start-BitsTransfer `
-            -Source "\\$SourceComputer\C$\Temp\BitsTestFile.txt" `
-            -Destination "\\$DestinationComputer\C$\Temp\" `
-            -DisplayName $BitsTransferName `
-            -Asynchronous | Out-Null
-        $BitsJob = Get-BitsTransfer $BitsTransferName
-        
-        #Wait for Bits to start transfer
-        $LastStatus = $BitsJob.JobState 
         Do{
-            If ($LastStatus -ne $BitsJob.JobState) {
-                $LastStatus = $BitsJob.JobState
+            If(($AutoSize -eq $True) -and ($TotalTime.TotalSeconds -lt 12)){
+                $TransferSize = $TransferSize * 2
+                $TempFile = [System.IO.File]::Create("\\$SourceComputer\C$\Temp\BitsTestFile.txt")
+                $TempFile.SetLength($TransferSize)
+                $TempFile.Close()                   
             }
-            If ($LastStatus -like "*Error*") {
-                Remove-BitsTransfer $BitsJob
-                Write-Host "Error connecting to download."
-			    Break
+            
+            $BitsTransferName = "BITS Speed Test" + (Get-Date)
+            Start-BitsTransfer `
+                -Source "\\$SourceComputer\C$\Temp\BitsTestFile.txt" `
+                -Destination "\\$DestinationComputer\C$\Temp\" `
+                -DisplayName $BitsTransferName `
+                -Asynchronous | Out-Null
+            $BitsJob = Get-BitsTransfer $BitsTransferName
+        
+            #Wait for Bits to start transfer
+            $LastStatus = $BitsJob.JobState 
+            Do{
+                If ($LastStatus -ne $BitsJob.JobState) {
+                    $LastStatus = $BitsJob.JobState
+                }
+                If ($LastStatus -like "*Error*") {
+                    Remove-BitsTransfer $BitsJob
+                    Write-Host "Error connecting to download."
+			        Break
+                }
+            }While($LastStatus -ne "Transferring")
+
+            #Transfer Started - Monitor and Time 
+            $StartTime = Get-Date
+            While($BitsJob.BytesTransferred -lt $BitsJob.BytesTotal){
+                $PercentComplete = ($BitsJob.BytesTransferred / $BitsJob.BytesTotal)*100
+                Write-Progress -Activity "Transferring Data: Test ($($_)/$TestCount)" -Status "$PercentComplete Percent Complete" -PercentComplete $PercentComplete
             }
-        }While($LastStatus -ne "Transferring")
 
-        #Transfer Started - Monitor and Time 
-        $StartTime = Get-Date
-        While($BitsJob.BytesTransferred -lt $BitsJob.BytesTotal){
-            $PercentComplete = ($BitsJob.BytesTransferred / $BitsJob.BytesTotal)*100
-            Write-Progress -Activity "Transferring Data: Test ($($_)/$TestCount)" -Status "$PercentComplete Percent Complete" -PercentComplete $PercentComplete
-        }
-
-        $StopTime = Get-Date
-        Write-Progress -completed -Activity "Transferring Data: Test ($($_)/$TestCount)" 
-        #Calculate Data 
-        $TotalTime = New-TimeSpan $StartTime $StopTime
-        $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
-        $MbpsArray += $Mbps
-
-	Complete-BitsTransfer $BitsJob
+            $StopTime = Get-Date
+            Write-Progress -completed -Activity "Transferring Data: Test ($($_)/$TestCount)" 
+            #Calculate Data 
+            $TotalTime = New-TimeSpan $StartTime $StopTime
+            $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
+            $MbpsArray += $Mbps
+            Complete-BitsTransfer $BitsJob
+        }While(($Autosize -eq $True) -and ($TotalTime.TotalSeconds -lt 12))
+	
     }
 
     Write-Host "Mbps:"
@@ -101,4 +112,3 @@ Function Get-BITSSpeed{
     Remove-Item "\\$SourceComputer\C$\Temp\BitsTestFile.txt"
     Remove-Item "\\$DestinationComputer\C$\Temp\BitsTestFile.txt"
 }
-
