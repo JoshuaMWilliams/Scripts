@@ -25,16 +25,14 @@
 
 Function Get-BITSSpeed{
     Param(
-		[parameter(Mandatory = $True)]
-		[string]$DestinationComputer,
-        [parameter(Mandatory = $False)]
-        [string]$SourceComputer = $env:ComputerName,
+	[parameter(Mandatory = $True)]
+	[string]$DestinationComputer,
         [Parameter(Mandatory = $False)]
         [int]$TestCount = 1,
         [Parameter(Mandatory = $False)]
         [double]$TransferSize = 20mb
 	)
-    Clear-Host
+    [string]$SourceComputer = $env:ComputerName,
     Import-Module BitsTransfer
 
     #Test Connectivity 
