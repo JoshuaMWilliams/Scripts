@@ -89,7 +89,7 @@ Function Get-BITSSpeed{
         $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
         $MbpsArray += $Mbps
 
-
+	Complete-BitsTransfer $BitsTransferName
     }
 
     Write-Host "Mbps:"
