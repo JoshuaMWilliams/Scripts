@@ -14,6 +14,7 @@
 .PARAMETER AutoSize 
     Whether or not to use AutoSize functionality
 .PARAMETER MinimumTransferTime
+    Default: 12
     The minimum transfer time for auto sized tests in seconds
 .NOTES
   Version:        1.0
