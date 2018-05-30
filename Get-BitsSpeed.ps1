@@ -105,11 +105,11 @@ Function Get-BITSSpeed{
             #Calculate Data 
 	    #Add Results to Array
       	    $Mbps = (((($BitsJob.BytesTotal / $TotalTime.TotalSeconds) * 8) / 1024 ) / 1024)
-            $MbpsArray += $Mbps
+            
             $TotalTime = New-TimeSpan $StartTime $StopTime
             Complete-BitsTransfer $BitsJob
         }While(($Autosize -eq $True) -and ($TotalTime.TotalSeconds -lt $MinimumTransferTime))
-	
+	$MbpsArray += $Mbps
 
     }
 
