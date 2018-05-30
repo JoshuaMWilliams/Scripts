@@ -13,6 +13,8 @@
     The size of the file that will be transferred
 .PARAMETER AutoSize 
     Whether or not to use AutoSize functionality
+.PARAMETER MinimumTransferTime
+    The minimum transfer time for auto sized tests in seconds
 .NOTES
   Version:        1.0
   Author:         Joshua M. Williams (JoshuaMWilliams@ProtonMail.com)
@@ -34,7 +36,9 @@ Function Get-BITSSpeed{
         [Parameter(Mandatory = $False)]
         [double]$TransferSize = 20mb,
         [Parameter(Mandatory = $False)]
-        [bool]$AutoSize
+        [bool]$AutoSize,
+	[Parameter(Mandatory = $False)]
+	[int]$MinimumTransferTime = 12
 	)
     [string]$SourceComputer = $env:ComputerName
     Import-Module BitsTransfer
@@ -60,7 +64,7 @@ Function Get-BITSSpeed{
     1..$TestCount | %{
         Do{
 	    #Automatically increase size if AutoSize and Time Requirement conditions are met
-            If(($AutoSize -eq $True) -and ($TotalTime.TotalSeconds -lt 12)){
+            If(($AutoSize -eq $True) -and ($TotalTime.TotalSeconds -lt $MinimumTransferTime)){
                 $TransferSize = $TransferSize * 2
                 $TempFile = [System.IO.File]::Create("\\$SourceComputer\C$\Temp\BitsTestFile.txt")
                 $TempFile.SetLength($TransferSize)
@@ -103,7 +107,7 @@ Function Get-BITSSpeed{
             $MbpsArray += $Mbps
             $TotalTime = New-TimeSpan $StartTime $StopTime
             Complete-BitsTransfer $BitsJob
-        }While(($Autosize -eq $True) -and ($TotalTime.TotalSeconds -lt 12))
+        }While(($Autosize -eq $True) -and ($TotalTime.TotalSeconds -lt $MinimumTransferTime))
 	
 
     }
