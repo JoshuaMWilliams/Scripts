@@ -24,7 +24,7 @@
 .EXAMPLE
   Get-BitsSpeed -DestinationComputer hostname123 -TestCount 2
   	Performs 2 tests to hostname123
-  Get-BitsSpeed -DestinationComputer hostname123 -TestCount 2 -Size 1Gb
+  Get-BitsSpeed -DestinationComputer hostname123 -TestCount 2 -TransferSize 1Gb
   	Performs 2 tests with a 1Gb file to hostname123
 #>
 
