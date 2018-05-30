@@ -15,8 +15,8 @@
 
 Function Get-TopConsoleUser{
     param(
-	      [parameter(Mandatory = $True)]
-	      $Username
+	[parameter(Mandatory = $True)]
+	$Username,
         [parameter(Mandatory = $True)]
         $SiteServer
     )
