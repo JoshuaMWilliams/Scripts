@@ -15,10 +15,13 @@
 
 Function Get-TopConsoleUser{
     param(
-	[parameter(Mandatory = $True)]
+	[parameter(Mandatory = $True, ValueFromPipeline = $True)]
 	$Username,
         [parameter(Mandatory = $True)]
-        $SiteServer
+        $SiteServer,
+	[parameter(Mandatory = $True)]
+	[ValidateLength(3,3)]
+	$SiteCode 
     )
     $SamAccountName = (Get-ADUser $Username).SamAccountName
     $query = "
@@ -28,5 +31,5 @@ Function Get-TopConsoleUser{
             WHERE
                 SMS_G_System_SYSTEM_CONSOLE_USAGE.TopConsoleUser LIKE '%$SamAccountName'
     "
-    (Get-WmiObject -ComputerName $SiteServer -Namespace root\sms\site_pr1 -Query $query).SMS_R_SYSTEM.Name
+    (Get-WmiObject -ComputerName $SiteServer -Namespace root\sms\site_$SiteCode -Query $query).SMS_R_SYSTEM.Name
 }
