@@ -21,7 +21,7 @@ Function Get-TopConsoleUser{
         $SiteServer,
 	[parameter(Mandatory = $True)]
 	[ValidateLength(3,3)]
-	$SiteCode 
+	[string]$SiteCode 
     )
     $SamAccountName = (Get-ADUser $Username).SamAccountName
     $query = "
